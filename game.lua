@@ -6,6 +6,7 @@ function gameLoad()
 	-- no gravity in space
 	world = love.physics.newWorld( 0, 0, true ) 
 
+	lost = false
 	time = 0
 
 	objects = {}
@@ -15,7 +16,7 @@ function gameLoad()
 
 	explosion = love.graphics.newParticleSystem(particleImage,100)
 	explosion:setEmissionRate(100)
-	explosion:setSpeed(300,300)
+	explosion:setSpeed(300,500)
 	explosion:setGravity(0)
 	explosion:setSizes(1,2)
 	explosion:setColors(255,255,255,128, 255,255,255,0)
@@ -68,13 +69,22 @@ function beginContact(a,b,c)
 		oa.fixture:destroy()
 		objects[aa] = nil;
 	end
+	if lost==false and spaceship.health <= 0 then
+		spaceship.body:setAwake(false)
+		spaceship.body:destroy()
+		spaceship.fixture:destroy()
+		spaceship.acceleration:setLifetime(0.5)
+		spaceship.acceleration:setPosition(spaceship.body:getX(), spaceship.body:getY())
+		spaceship.acceleration:setSpread(360)
+		spaceship.acceleration:start()
+		lost = true
+	end
 end
 
 function endContact(a,b,c)
 end
 
 function gameUpdate(dt)
-	time = time + dt
 	world:update(dt)
 
 	for i,obj in pairs(objects) do
@@ -82,9 +92,13 @@ function gameUpdate(dt)
 	end
 	explosion:update(dt)
 
-	if spaceship.health <= 0 then
-		changeState("menu")
-	elseif spaceship.body then
+	if lost == true then
+		if love.keyboard.isDown("return") then
+			changeState("highscore")
+			highscoreNew(time)
+		end
+	else
+		time = time + dt
 		if love.keyboard.isDown("left") then
 			spaceship:rotate(dt);
 		end
@@ -101,6 +115,7 @@ function gameUpdate(dt)
 end
 
 function gameDraw()
+	love.graphics.print("Time: "..time .."s", 200,0)
 	for i,obj in pairs(objects) do
 		obj:draw()
 	end

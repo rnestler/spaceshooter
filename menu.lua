@@ -1,6 +1,37 @@
 
 function menuLoad()
-	active = 1
+	ship = 1
+	mainmenu = {
+		{
+			text="New Game",
+			handler = function()
+				changeState("game")
+			end
+		},
+		{
+			text="Ship",
+			handler = function()
+				ship = wrap(ship+1,1,2)
+			end,
+			draw = function(x,y)
+				love.graphics.print("Ship: " .. ship, x,y)
+			end
+		},
+		{
+			text="Highscore",
+			handler = function()
+				changeState("highscore")
+			end
+		},
+		{
+			text="Quit",
+			handler = function()
+				love.event.push("quit")
+			end
+		}
+	}
+	menu = mainmenu
+	menuindex = 1
 end
 
 function menuUpdate(dt)
@@ -8,17 +39,17 @@ end
 
 function menuDraw()
 
-	if active == 1 then
-		love.graphics.setColor(0, 0, 255, 255)
+	for k,v in ipairs(menu) do
+		if k==menuindex then
+			love.graphics.setColor(0, 0, 255, 255)
+		end
+		if v.draw then
+			v.draw(100, 50+50*k)
+		else
+			love.graphics.print(v.text, 100, 50+50*k)
+		end
+		love.graphics.setColor(255, 255, 255, 255)
 	end
-	love.graphics.print("New Game", 100,100)
-	love.graphics.setColor(255, 255, 255, 255)
-
-	if active == 2 then
-		love.graphics.setColor(0, 0, 255, 255)
-	end
-	love.graphics.print("Quit", 100,150)
-	love.graphics.setColor(255, 255, 255, 255)
 end
 
 function menuKey(key)
@@ -27,15 +58,11 @@ function menuKey(key)
 		print("quit")
 		love.event.push("quit")   -- actually causes the app to quit
 	elseif key == "up" then
-		active = clamp(active-1,1,2)
+		menuindex = wrap(menuindex-1,1, table.maxn(menu))
 	elseif key == "down" then
-		active = clamp(active+1,1,2)
+		menuindex = wrap(menuindex+1,1, table.maxn(menu))
 	elseif key == "return" then
-		print("return")
-		if active == 1 then
-			changeState("game")
-		elseif active == 2 then
-			love.event.push("quit")   -- actually causes the app to quit
-		end
+		menu[menuindex].handler()
 	end
 end
+

@@ -2,7 +2,7 @@
 require("object")
 
 function spaceshipNew(world)
-	spaceship = objectNew(world, "data/spaceship1.png")
+	spaceship = objectNew(world, "data/spaceship"..ship..".png")
 	spaceship.body:setPosition(100,100)
 
 
@@ -20,7 +20,7 @@ function spaceshipNew(world)
 	acceleration:stop()
 	
 	spaceship.acceleration = acceleration
-	spaceship.health = 5
+	spaceship.health = 1
 
 	spaceship.update = spaceshipUpdate
 	spaceship.draw = spaceshipDraw
@@ -29,15 +29,19 @@ function spaceshipNew(world)
 end
 		
 function spaceshipAccelerate(this, dt)
-	objectAccelerate(this, dt)
-	this.acceleration:setPosition(spaceship.body:getX(),spaceship.body:getY())
-	this.acceleration:setDirection(spaceship.body:getAngle()+dt/math.abs(dt)*90/180*3.14)
-	this.acceleration:start()
+	if this.health>0 then
+		objectAccelerate(this, dt)
+		this.acceleration:setPosition(this.body:getX(),this.body:getY())
+		this.acceleration:setDirection(this.body:getAngle()+dt/math.abs(dt)*90/180*3.14)
+		this.acceleration:start()
+	end
 end
 
 
 function spaceshipUpdate(this, dt)
-	objectUpdate(this, dt)
+	if this.health>0 then
+		objectUpdate(this, dt)
+	end
 	this.acceleration:update(dt)
 end
 
@@ -45,8 +49,11 @@ function spaceshipDraw(this)
 	for i=0,this.health-1 do
 		love.graphics.draw(this.img, i*24, 0, 0, 24/spaceship.img:getWidth())
 	end
-	love.graphics.print(string.format('Pos: (%i,%i)\nAngle: %1.3f\nSpeed: (%.2f,%.2f)',
-	this.body:getX(), this.body:getY(), this.body:getAngle(), this.body:getLinearVelocity() ), 10, 24)
 	love.graphics.draw(this.acceleration,0,0)
-	objectDraw(this)
+	if this.health>0 then
+		love.graphics.print(string.format('Pos: (%i,%i)\nAngle: %1.3f\nSpeed: (%.2f,%.2f)',
+		this.body:getX(), this.body:getY(), this.body:getAngle(), this.body:getLinearVelocity() ), 10, 24)
+		objectDraw(this)
+	end
 end
+
