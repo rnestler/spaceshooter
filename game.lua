@@ -8,6 +8,7 @@ function gameLoad()
 
 	lost = false
 	time = 0
+	spawnTime = 0
 
 	objects = {}
 
@@ -99,6 +100,14 @@ function gameUpdate(dt)
 		end
 	else
 		time = time + dt
+		spawnTime = spawnTime + dt
+		if spawnTime > 1 then
+			spawnTime = 0
+			table.insert(objects, asteroidNew(world, time*10))
+			for k,v in pairs(objects) do
+				v.fixture:setUserData(k)
+			end
+		end
 		if love.keyboard.isDown("left") then
 			spaceship:rotate(dt);
 		end
