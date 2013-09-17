@@ -12,7 +12,7 @@ function gameLoad()
 
 	objects = {}
 
-	spaceship = spaceshipNew(world);
+	spaceship = spaceshipNew(world, ship);
 	table.insert(objects, spaceship)
 
 	explosion = love.graphics.newParticleSystem(particleImage,100)

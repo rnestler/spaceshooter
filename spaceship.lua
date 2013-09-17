@@ -1,7 +1,8 @@
 
 require("object")
 
-function spaceshipNew(world)
+function spaceshipNew(world, ship)
+	ship = ship or 1
 	spaceship = objectNew(world, "data/spaceship"..ship..".png")
 	spaceship.body:setPosition(100,100)
 
@@ -20,7 +21,7 @@ function spaceshipNew(world)
 	acceleration:stop()
 	
 	spaceship.acceleration = acceleration
-	spaceship.health = 1
+	spaceship.health = 5
 
 	spaceship.update = spaceshipUpdate
 	spaceship.draw = spaceshipDraw
