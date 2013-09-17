@@ -3,12 +3,13 @@ require("game")
 require("menu")
 require("highscore")
 
+local state = "menu"
+
 function love.load()
 	love.graphics.setMode(800,480)
 	background = love.graphics.newImage("data/background.png")
 
-	state = "menu"
-	menuLoad()
+	changeState(state)
 end
 
 function changeState(newState)
@@ -28,7 +29,7 @@ function love.update(dt)
 	elseif state == "game" then
 		gameUpdate(dt)
 	elseif state == "highscore" then
-		highscoreUpdate()
+		highscoreUpdate(dt)
 	end
 end
 
@@ -43,12 +44,12 @@ function love.draw()
 	end
 end
 
-function love.keypressed(key)
+function love.keypressed(key, unicode)
 	if state == "menu" then
 		menuKey(key)
 	elseif state == "game" then
 	elseif state == "highscore" then
-		highscoreKey(key)
+		highscoreKey(key, unicode)
 	end
 end
 

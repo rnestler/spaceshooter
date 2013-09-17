@@ -26,6 +26,7 @@ function menuLoad()
 		{
 			text="Quit",
 			handler = function()
+				highscoreSave()
 				love.event.push("quit")
 			end
 		}
