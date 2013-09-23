@@ -8,7 +8,7 @@ function highscoreLoad()
 			file = love.filesystem.newFile("highscore.csv")
 			file:open("r")
 			data = file:read()
-			for k, v in string.gmatch(data, "([^,]+),([%w%.]+)") do
+			for k, v in string.gmatch(data, "([%g ]+),([%w%.]+)") do
 				print(k,v)
 				table.insert(highscore, {Name=k, Time=tonumber(v)})
 			end
