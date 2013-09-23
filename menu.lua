@@ -58,9 +58,9 @@ function menuKey(key)
 	if key == "escape" then
 		print("quit")
 		love.event.push("quit")   -- actually causes the app to quit
-	elseif key == "up" then
+	elseif key == "up" or key == "k" then
 		menuindex = wrap(menuindex-1,1, table.maxn(menu))
-	elseif key == "down" then
+	elseif key == "down" or key == "j" then
 		menuindex = wrap(menuindex+1,1, table.maxn(menu))
 	elseif key == "return" then
 		menu[menuindex].handler()
