@@ -57,7 +57,7 @@ function highscoreKey(key, unicode)
 			end
 		end
 	else
-		if key == "return" then
+		if key == "return" or key == "escape" then
 			changeState("menu")
 		end
 	end
